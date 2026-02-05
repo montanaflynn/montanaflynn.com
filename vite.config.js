@@ -1,3 +1,15 @@
 import { defineConfig } from "vite";
+import { execSync } from "child_process";
 
-export default defineConfig({});
+const commit = execSync("git rev-parse HEAD").toString().trim();
+
+export default defineConfig({
+  plugins: [
+    {
+      name: "inject-commit",
+      transformIndexHtml(html) {
+        return html.replace('content=""', `content="${commit}"`);
+      },
+    },
+  ],
+});

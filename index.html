@@ -4,7 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Montana Flynn</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="commit" content="">
 <meta name="description" content="Montana Flynn — Distributed Systems Engineer">
+<meta name="author" content="Montana Flynn">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="canonical" href="https://montanaflynn.com">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://montanaflynn.com">
+<meta property="og:title" content="Montana Flynn">
+<meta property="og:description" content="Montana Flynn — Distributed Systems Engineer">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:site" content="@montanaflynn">
+<meta name="twitter:title" content="Montana Flynn">
+<meta name="twitter:description" content="Montana Flynn — Distributed Systems Engineer">
+<script>
+(function(){
+  var s=localStorage.getItem('theme');
+  var t=s||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');
+  document.documentElement.setAttribute('data-theme',t);
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
@@ -16,9 +36,19 @@
     --fg:#c8c8c8;
     --fg-dim:#585858;
     --fg-bright:#e8e8e8;
-    --accent:#552583;
+    --accent:#00ff00;
+    --border:#1a1a1a;
     --mono:'JetBrains Mono',monospace;
     --ease:cubic-bezier(.25,.1,.25,1);
+  }
+
+  [data-theme="light"]{
+    --bg:#f5f5f5;
+    --fg:#4a4a4a;
+    --fg-dim:#888;
+    --fg-bright:#1a1a1a;
+    --accent:#00aa00;
+    --border:#ddd;
   }
 
   html{
@@ -40,7 +70,9 @@
     padding:3vh 6vw;
   }
 
-  ::selection{background:var(--accent);color:#fff}
+  body{transition:background .3s var(--ease),color .3s var(--ease)}
+
+  ::selection{background:var(--accent);color:var(--bg)}
 
   /* ── layout ── */
   .page{
@@ -147,16 +179,16 @@
   .tab.active{color:var(--fg-bright);border-bottom-color:var(--accent)}
 
   .tab-panel{display:none}
-  .tab-panel.active{display:block}
+  .tab-panel.active{display:block;min-height:22rem}
 
   /* ── project list ── */
   .projects{list-style:none}
 
   .project{
-    border-top:1px solid #1a1a1a;
+    border-top:1px solid var(--border);
     overflow:hidden;
   }
-  .project:last-child{border-bottom:1px solid #1a1a1a}
+  .project:last-child{border-bottom:1px solid var(--border)}
 
   .project-header{
     display:flex;
@@ -261,6 +293,27 @@
     to{opacity:1;transform:translateX(0)}
   }
 
+  /* ── theme toggle ── */
+  .theme-toggle{
+    position:fixed;
+    top:1.5rem;
+    right:1.5rem;
+    background:none;
+    border:none;
+    cursor:pointer;
+    color:var(--fg-dim);
+    padding:.5rem;
+    display:flex;
+    align-items:center;
+    transition:color .25s var(--ease);
+    z-index:10;
+  }
+  .theme-toggle:hover{color:var(--accent)}
+  .theme-toggle svg{width:16px;height:16px;fill:currentColor}
+  .icon-moon{display:none}
+  [data-theme="light"] .icon-sun{display:none}
+  [data-theme="light"] .icon-moon{display:inline}
+
   /* ── responsive ── */
   @media(max-width:860px){
     html{font-size:clamp(11px,2.4vw,14px)}
@@ -281,6 +334,21 @@
     .links a svg{width:16px;height:16px}
   }
 
+  /* ── commit hash ── */
+  .commit{
+    position:fixed;
+    bottom:1rem;
+    right:1.5rem;
+    font-family:var(--mono);
+    font-size:.55rem;
+    color:var(--fg-dim);
+    text-decoration:none;
+    opacity:.4;
+    transition:opacity .25s var(--ease),color .25s var(--ease);
+    z-index:10;
+  }
+  .commit:hover{opacity:1;color:var(--accent)}
+
   /* ── tall screens ── */
   @media(min-height:900px) and (min-width:861px){
     html{font-size:15px}
@@ -288,6 +356,13 @@
 </style>
 </head>
 <body>
+
+<a class="commit" id="commit-link"></a>
+
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+  <svg class="icon-sun" viewBox="0 0 24 24"><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></svg>
+  <svg class="icon-moon" viewBox="0 0 24 24"><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.98 6.98 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></svg>
+</button>
 
 <div class="page">
   <div class="left">
@@ -511,6 +586,53 @@
 </div>
 
 <script>
+function getTheme(){
+  return document.documentElement.getAttribute('data-theme')||'dark';
+}
+
+function updateFavicon(){
+  var t=getTheme();
+  var bg=t==='light'?'%23f5f5f5':'%230a0a0a';
+  var fg=t==='light'?'%231a1a1a':'%23c8c8c8';
+  var svg='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="12" fill="'+bg+'"/><text x="50" y="66" font-family="monospace" font-weight="600" font-size="42" fill="'+fg+'" text-anchor="middle">MF</text></svg>';
+  document.querySelector('link[rel="icon"]').href=svg;
+}
+
+function updateThemeColor(){
+  var t=getTheme();
+  document.querySelector('meta[name="theme-color"]').content=t==='light'?'#f5f5f5':'#0a0a0a';
+}
+
+function toggleTheme(){
+  var t=getTheme()==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('theme',t);
+  updateFavicon();
+  updateThemeColor();
+}
+
+window.matchMedia('(prefers-color-scheme:light)').addEventListener('change',function(e){
+  if(!localStorage.getItem('theme')){
+    document.documentElement.setAttribute('data-theme',e.matches?'light':'dark');
+    updateFavicon();
+    updateThemeColor();
+  }
+});
+
+updateFavicon();
+
+// commit hash
+(function(){
+  var hash=document.querySelector('meta[name="commit"]').content;
+  if(hash){
+    var el=document.getElementById('commit-link');
+    el.textContent=hash.slice(0,7);
+    el.href='https://github.com/montanaflynn/montanaflynn.com/commit/'+hash;
+    el.target='_blank';
+    el.rel='noopener';
+  }
+})();
+
 function toggle(header){
   const project=header.parentElement;
   const wasOpen=project.classList.contains('open');
